@@ -9,8 +9,13 @@ int main()
     add_list(list,5);
     add_list(list,6);
     add_list(list,7);
+    add_list(list,7);
+    add_list(list,7);
     
-    printf("count:%d\n",count_list(list));
+    print_list(list);
+    printf("\n");
+
+    printf("index:%d\n",find_list_index(list,15));
 
     destroy_list(list);
 

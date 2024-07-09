@@ -55,6 +55,98 @@ void add_list(LinkedList* list,double data)
     }
 }
 
+bool remove_list(LinkedList* list,double data)
+{
+    if(list->head==0)
+    {
+        return false;
+    }
+    else if(list->head->data==data)
+    {
+        free(list->head);
+        list->head=0;
+    }
+    else
+    {
+        node* temp=list->head;
+        node* temp_old=list->head;
+        while(temp->next!=0)
+        {
+            temp_old=temp;
+            temp=temp->next;
+
+            if(temp->data==data)
+            {
+                temp_old->next=temp->next;
+                free(temp);
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+}
+
+bool find_list(LinkedList* list,double data)
+{
+    if(list->head==0)
+    {
+        return false;
+    }
+    else if(list->head->data==data)
+    {
+        return true;
+    }
+    else
+    {
+        node* temp=list->head;
+        node* temp_old=list->head;
+        while(temp->next!=0)
+        {
+            temp_old=temp;
+            temp=temp->next;
+
+            if(temp->data==data)
+            {
+                return true;
+                break;
+            }
+        }
+        return false;
+    }
+}
+
+int find_list_index(LinkedList* list,double data)
+{
+    int index=-1;
+    if(list->head==0)
+    {
+        index=-1;
+    }
+    else if(list->head->data==data)
+    {
+        index=0;
+    }
+    else
+    {
+        int i=0;
+        node* temp=list->head;
+        node* temp_old=list->head;
+        while(temp->next!=0)
+        {
+            temp_old=temp;
+            temp=temp->next;
+            i++;
+            if(temp->data==data)
+            {
+                index=i;
+                break;
+            }
+        }
+    }
+    return index;
+}
+
 void print_list(LinkedList* list)
 {
     if(list->head==0)
@@ -99,3 +191,4 @@ int count_list(LinkedList* list)
         return len;
     }
 }
+
