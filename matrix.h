@@ -10,5 +10,23 @@ struct smatrix{
 };
 typedef struct smatrix matrix;
 
+matrix* matrix_create(real[],size);
+matrix* matrix_zeros(size);
+void matrix_delete(matrix*);
+
+void matrix_print(matrix*);
+
+real* matrix_at(matrix*,unsigned int,unsigned int);
+matrix* matrix_copy(matrix *,unsigned int,unsigned int,size);
+matrix* matrix_duplicate(matrix*);
+matrix* matrix_col(matrix*,unsigned int);
+matrix* matrix_row(matrix*,unsigned int);
+
+matrix* matrix_transpose(matrix*);
+matrix* matrix_add(matrix*,matrix*);
+matrix* matrix_substract(matrix*,matrix*);
+matrix* matrix_multiply(matrix*,matrix*);
+matrix* matrix_scale(matrix*,real);
+real matrix_dot_product(matrix*,matrix*);
 
 #endif

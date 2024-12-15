@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "augmented_matrix.h": "c",
+        "matrix.h": "c",
+        "stdio.h": "c"
+    }
+}
