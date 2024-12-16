@@ -12,4 +12,5 @@ size size_create(unsigned int,unsigned int);
 void size_print(size);
 unsigned short size_is_equal(size,size);
 size size_flip(size);
+unsigned short size_is_square(size);
 #endif

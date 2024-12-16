@@ -6,7 +6,7 @@ augmatrix* augmatrix_create(matrix* left,matrix* right){
     augmatrix *m=0;
     if(left->size.rows!=right->size.rows)
     {
-        fprintf(stderr, "Matrix rows not equal!\n", "string format", 30);
+       Error("Matrix rows not equal!\n");
     }
     else
     {

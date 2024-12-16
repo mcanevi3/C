@@ -39,15 +39,15 @@ real *matrix_at(matrix *m, unsigned int i, unsigned int j)
     real *data = 0;
     if (m->data == 0)
     {
-        fprintf(stderr, "Matrix empty!\n", "string format", 30);
+        Error("Matrix empty!\n");
     }
     else if ((i - 1) >= m->size.rows)
     {
-        fprintf(stderr, "Row out of range!\n", "string format", 30);
+        Error("Row out of range!\n");
     }
     else if ((j - 1) >= m->size.cols)
     {
-        fprintf(stderr, "Column out of range!\n", "string format", 30);
+        Error("Column out of range!\n");
     }
     else
     {
@@ -87,11 +87,11 @@ matrix *matrix_col(matrix *m, unsigned int j)
     matrix *data = 0;
     if (m->data == 0)
     {
-        fprintf(stderr, "Matrix empty!\n", "string format", 30);
+        Error("Matrix empty!\n");
     }
     else if ((j - 1) >= m->size.cols)
     {
-        fprintf(stderr, "Column out of range!\n", "string format", 30);
+        Error("Column out of range!\n");
     }
     else
     {
@@ -105,11 +105,11 @@ matrix *matrix_row(matrix *m, unsigned int i)
     matrix *data = 0;
     if (m->data == 0)
     {
-        fprintf(stderr, "Matrix empty!\n", "string format", 30);
+        Error("Matrix empty!\n");
     }
     else if ((i - 1) >= m->size.rows)
     {
-        fprintf(stderr, "Column out of range!\n", "string format", 30);
+        Error("Column out of range!\n");
     }
     else
     {
@@ -141,7 +141,7 @@ matrix *matrix_add(matrix *a, matrix *b)
     matrix *c = 0;
     if (!size_is_equal(a->size, b->size))
     {
-        fprintf(stderr, "Matrix sizes not equal!\n", "string format", 30);
+        Error("Matrix sizes not equal!\n");
     }
     else
     {
@@ -162,7 +162,7 @@ matrix *matrix_substract(matrix *a, matrix *b)
     matrix *c = 0;
     if (!size_is_equal(a->size, b->size))
     {
-        fprintf(stderr, "Matrix sizes not equal!\n", "string format", 30);
+        Error("Matrix sizes not equal!\n");
     }
     else
     {
@@ -184,7 +184,7 @@ matrix *matrix_multiply(matrix *a, matrix *b)
 
     if (a->size.cols != b->size.rows)
     {
-        fprintf(stderr, "Matrix sizes not equal!\n", "string format", 30);
+        Error("Matrix sizes not equal!\n");
     }
     else
     {
@@ -206,7 +206,7 @@ matrix *matrix_multiply(matrix *a, matrix *b)
             }
             for (int k = 1; k <= a->size.rows; k++)
             {
-                *matrix_at(c, k, p)=*matrix_at(res, k, 1);
+                *matrix_at(c, k, p) = *matrix_at(res, k, 1);
             }
         }
         matrix_delete(T);
@@ -221,11 +221,11 @@ real matrix_dot_product(matrix *a, matrix *b)
     real res = 0;
     if (!size_is_equal(size_flip(a->size), b->size))
     {
-        fprintf(stderr, "Matrix are not compatible!\n", "string format", 30);
+        Error("Matrix are not compatible!\n");
     }
     else if (!(b->size.rows == 1 || b->size.cols == 1))
     {
-        fprintf(stderr, "Matrices need to be vectors!\n", "string format", 30);
+        Error("Matrices need to be vectors!\n");
     }
     else
     {
@@ -261,4 +261,26 @@ matrix *matrix_scale(matrix *src, real scalar)
         }
     }
     return res;
+}
+
+matrix* matrix_identity(unsigned short size)
+{
+    matrix *m =0;
+    m=matrix_zeros(size_create(size,size));
+    for (int i = 0; i < size ; i++)
+    {
+        m->data[i*size+i] = 1;
+    }
+    return m;
+}
+
+matrix* matrix_diag(real data[],unsigned int len)
+{
+    matrix* m=matrix_zeros(size_create(len,len));
+    for (int i = 0; i < len ; i++)
+    {
+        m->data[i*len+i] = data[i];
+    }
+
+    return m;
 }

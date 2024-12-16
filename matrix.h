@@ -12,6 +12,9 @@ typedef struct smatrix matrix;
 
 matrix* matrix_create(real[],size);
 matrix* matrix_zeros(size);
+matrix* matrix_identity(unsigned short);
+matrix* matrix_diag(real[],unsigned int );
+
 void matrix_delete(matrix*);
 
 void matrix_print(matrix*);

@@ -21,3 +21,8 @@ size size_flip(size src)
 {
     return size_create(src.cols,src.rows);
 }
+
+unsigned short size_is_square(size s)
+{
+    return s.rows==s.cols;
+}
