@@ -341,3 +341,31 @@ void matrix_rowadd(matrix* m,unsigned int index1,real scalar,unsigned int index2
         }
     }
 }
+
+real matrix_det(matrix* m)
+{
+    float factor=0;
+    float pivot=1;
+    unsigned int col_count=m->size.cols;
+    unsigned int row_count=m->size.rows;
+
+    for(unsigned int i=1;i<=row_count-1;i++)
+    {
+        // pivot
+        pivot=*matrix_at(m,i,i);
+        // matrix_rowop(m,'/',factor,i);
+        //same column
+        for(int k=i+1;k<=row_count;k++)
+        {
+            factor=(*matrix_at(m,k,i))/pivot;
+            matrix_rowadd(m,k,-1.0*factor,i);
+        }
+        matrix_print(m);
+    }
+    float r=1;
+    for(unsigned int i=1;i<=row_count;i++)
+    {
+        r*=(*matrix_at(m,i,i));
+    }
+    return r;
+}
