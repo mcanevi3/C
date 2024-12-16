@@ -13,5 +13,6 @@ augmatrix* augmatrix_create(matrix*,matrix*);
 void augmatrix_delete(augmatrix*);
 
 void augmatrix_print(augmatrix*);
+matrix* augmatrix_solve(augmatrix*,unsigned short);
 
 #endif

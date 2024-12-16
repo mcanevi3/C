@@ -30,8 +30,15 @@ matrix *matrix_zeros(size size)
 
 void matrix_delete(matrix *m)
 {
-    free(m->data);
-    free(m);
+    if(m!=0)
+    {
+        if(m->data!=0)
+        {
+            free(m->data);
+
+        }
+        free(m);
+    }
 }
 
 real *matrix_at(matrix *m, unsigned int i, unsigned int j)
@@ -58,15 +65,23 @@ real *matrix_at(matrix *m, unsigned int i, unsigned int j)
 
 void matrix_print(matrix *m)
 {
-    for (int i = 0; i < m->size.rows; i++)
+    if(m==0)
     {
-        for (int j = 0; j < m->size.cols; j++)
+        Error("Matrix Empty");
+    }
+    else
+    {
+        for (int i = 0; i < m->size.rows; i++)
         {
-            printf("%f ", m->data[i * m->size.cols + j]);
+            for (int j = 0; j < m->size.cols; j++)
+            {
+                printf("%f ", m->data[i * m->size.cols + j]);
+            }
+            printf("\n");
         }
         printf("\n");
     }
-    printf("\n");
+
 }
 
 matrix *matrix_copy(matrix *src, unsigned int i1, unsigned int j1, size s)
@@ -194,17 +209,17 @@ matrix *matrix_multiply(matrix *a, matrix *b)
         matrix *res;
 
         unsigned int len = a->size.cols;
-        for (int p = 1; p <= a->size.rows; p++)
+        for (unsigned int p = 1; p <= b->size.cols; p++)
         {
+            col = matrix_col(a, 1); //only for size
             T = matrix_col(b, p);
-            col = matrix_col(a, 1);
             res = matrix_zeros(col->size);
-            for (int k = 1; k <= len; k++)
+            for (unsigned int k = 1; k <= b->size.rows; k++)
             {
                 col = matrix_col(a, k);
                 res = matrix_add(res, matrix_scale(col, *matrix_at(T, k, 1)));
             }
-            for (int k = 1; k <= a->size.rows; k++)
+            for (unsigned int k = 1; k <= a->size.rows; k++)
             {
                 *matrix_at(c, k, p) = *matrix_at(res, k, 1);
             }
@@ -283,4 +298,46 @@ matrix* matrix_diag(real data[],unsigned int len)
     }
 
     return m;
+}
+
+void matrix_rowop(matrix* m,char op,real scalar,unsigned int index)
+{
+    if(index>m->size.rows)
+    {
+        Error("Row index out of bounds!\n");
+    }
+    else
+    {
+        switch (op)
+        {
+        case '*':
+            for(unsigned int j=1;j<=m->size.cols;j++)
+            {
+                (*matrix_at(m,index,j))*=scalar;            
+            }
+            break;
+        case '/':
+            matrix_rowop(m,'*',1/scalar,index);
+            break;
+        default:
+            Error("Operation not defined!\n");
+            break;
+        }
+    }
+}
+
+void matrix_rowadd(matrix* m,unsigned int index1,real scalar,unsigned int index2)
+{
+    // row1=row1+row2
+    if(index1>m->size.rows || index2>m->size.rows)
+    {
+        Error("Index out of bounds!\n");
+    }
+    else
+    {
+        for(unsigned int j=1;j<=m->size.cols;j++)
+        {
+            *matrix_at(m,index1,j)+=(scalar)*(*matrix_at(m,index2,j));            
+        }
+    }
 }

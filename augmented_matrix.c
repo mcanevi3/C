@@ -16,6 +16,7 @@ augmatrix* augmatrix_create(matrix* left,matrix* right){
     }
     return m;
 }
+
 void augmatrix_delete(augmatrix* m){
     matrix_delete(m->left);
     matrix_delete(m->right);
@@ -37,4 +38,47 @@ void augmatrix_print(augmatrix* m){
         printf("\n");
     }
     printf("\n");
+}
+
+matrix* augmatrix_solve(augmatrix* m,unsigned short debug)
+{
+    if(debug==1)augmatrix_print(m);
+
+    float factor=0;
+    unsigned int col_count_right=m->right->size.cols;
+    unsigned int row_count=m->left->size.rows;
+
+
+    for(unsigned int i=1;i<=row_count;i++)
+    {
+
+        // pivot
+        factor=*matrix_at(m->left,i,i);
+        matrix_rowop(m->left,'/',factor,i);matrix_rowop(m->right,'/',factor,i);
+
+        if(i+1<=row_count)
+        {
+            //same column
+            for(int k=i+1;k<=row_count;k++)
+            {
+                factor=*matrix_at(m->left,k,i);
+                matrix_rowadd(m->left,k,-1.0*factor,i);matrix_rowadd(m->right,k,-1.0*factor,i);
+            }
+        }
+
+        if(debug==1)augmatrix_print(m);
+    }
+    
+    //now back substitution
+    for(unsigned int i=row_count;i>=1;i--)
+    {
+        //same column
+        for(int k=1;k<=i-1;k++)
+        {
+            factor=*matrix_at(m->left,k,i);
+            matrix_rowadd(m->left,k,-1.0*factor,i);matrix_rowadd(m->right,k,-1.0*factor,i);
+        }
+        if(debug==1)augmatrix_print(m);
+    }
+    return matrix_duplicate(m->right);
 }

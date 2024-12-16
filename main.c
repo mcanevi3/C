@@ -3,18 +3,18 @@
 #include <stdio.h>
 
 int main(){
-    matrix* A=matrix_create(List(1,0,0,0,1,0,0,0,1),size_create(3,3));
-    matrix* b=matrix_create(List(1,2,3),size_create(3,1));
+    matrix* A=matrix_create(List(1,1,3,2,4,5,6,0,1),size_create(3,3));
+    matrix* b=matrix_create(List(1,7,9),size_create(3,1));
     augmatrix* prob=augmatrix_create(A,b);
-
-    augmatrix_print(prob);
-
-    matrix* c=matrix_diag(Vector(1,2,3));
-    matrix_print(c);
     
+    matrix* x=augmatrix_solve(prob,0);
+    matrix_print(x);
+    matrix* res=matrix_multiply(A,x);
+
+    matrix_delete(res);
+    matrix_delete(x);
     matrix_delete(A);
     matrix_delete(b);
-    matrix_delete(c);
     augmatrix_delete(prob);
     return 0;
 }

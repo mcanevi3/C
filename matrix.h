@@ -32,4 +32,7 @@ matrix* matrix_multiply(matrix*,matrix*);
 matrix* matrix_scale(matrix*,real);
 real matrix_dot_product(matrix*,matrix*);
 
+void matrix_rowop(matrix*,char,real,unsigned int);
+void matrix_rowadd(matrix* m,unsigned int,real,unsigned int);
+
 #endif

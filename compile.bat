@@ -1,2 +1,2 @@
 @echo off
-gcc *.c -o main.exe
+gcc *.c -g -o main.exe 
