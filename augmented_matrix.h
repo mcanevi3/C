@@ -14,5 +14,6 @@ void augmatrix_delete(augmatrix*);
 
 void augmatrix_print(augmatrix*);
 matrix* augmatrix_solve(augmatrix*,unsigned short);
+void augmatrix_order_pivots(augmatrix*);
 
 #endif

@@ -42,7 +42,41 @@ void augmatrix_print(augmatrix* m){
 
 matrix* augmatrix_solve(augmatrix* m,unsigned short debug)
 {
+    augmatrix_order_pivots(m);
     if(debug==1)augmatrix_print(m);
+
+    short type=0;
+    matrix* temp=0;
+    for(unsigned int k=1;k<m->left->size.rows;k++)
+    {
+        if(matrix_sum_row(m->left,k)==0)
+        {
+            temp=matrix_row(m->right,k);
+            if(matrix_has(temp,0))
+            {
+                if(type<2)
+                    type=1;
+            }
+            else
+            {
+                type=2;
+            }
+        }
+    }
+    matrix_delete(temp);
+
+    switch (type)
+    {
+    case 1:
+        printf("Infinetly many solutions!\n");
+        return 0;
+    case 2:
+        printf("No solution!\n");
+        return 0;
+    default:
+        break;
+    }
+
 
     float factor=0;
     unsigned int col_count_right=m->right->size.cols;
@@ -51,7 +85,6 @@ matrix* augmatrix_solve(augmatrix* m,unsigned short debug)
 
     for(unsigned int i=1;i<=row_count;i++)
     {
-
         // pivot
         factor=*matrix_at(m->left,i,i);
         matrix_rowop(m->left,'/',factor,i);matrix_rowop(m->right,'/',factor,i);
@@ -81,4 +114,16 @@ matrix* augmatrix_solve(augmatrix* m,unsigned short debug)
         if(debug==1)augmatrix_print(m);
     }
     return matrix_duplicate(m->right);
+}
+
+void augmatrix_order_pivots(augmatrix* m)
+{
+    for(int k=1;k<m->left->size.rows;k++)
+    {
+        if(matrix_sum_row(m->left,k)==0)
+        {
+            //zero pivot
+            matrix_row_interchange(m->left,k,m->left->size.rows);matrix_row_interchange(m->right,k,m->right->size.rows);
+        }
+    }
 }

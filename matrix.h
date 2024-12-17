@@ -16,7 +16,6 @@ matrix* matrix_identity(unsigned short);
 matrix* matrix_diag(real[],unsigned int );
 
 void matrix_delete(matrix*);
-
 void matrix_print(matrix*);
 
 real* matrix_at(matrix*,unsigned int,unsigned int);
@@ -33,8 +32,17 @@ matrix* matrix_scale(matrix*,real);
 real matrix_dot_product(matrix*,matrix*);
 
 void matrix_rowop(matrix*,char,real,unsigned int);
-void matrix_rowadd(matrix* m,unsigned int,real,unsigned int);
+void matrix_rowadd(matrix*,unsigned int,real,unsigned int);
+void matrix_row_interchange(matrix*,unsigned int,unsigned int);
+void matrix_col_interchange(matrix*,unsigned int,unsigned int);
 
-real matrix_det(matrix* m);
+real matrix_sum_row(matrix*,unsigned int);
+real matrix_sum_col(matrix*,unsigned int);
 
+unsigned short matrix_is_square(matrix*);
+void matrix_order_pivots(matrix*);
+real matrix_det(matrix*);
+matrix* matrix_inv(matrix*);
+
+unsigned short matrix_has(matrix*,real);
 #endif

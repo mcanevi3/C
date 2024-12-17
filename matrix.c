@@ -342,10 +342,40 @@ void matrix_rowadd(matrix* m,unsigned int index1,real scalar,unsigned int index2
     }
 }
 
+void matrix_row_interchange(matrix* m,unsigned int index1,unsigned int index2)
+{
+    real temp=0;
+    for(unsigned int j=1;j<=m->size.cols;j++)
+    {
+        temp=(*matrix_at(m,index2,j));
+        *matrix_at(m,index2,j)=*matrix_at(m,index1,j);
+        *matrix_at(m,index1,j)=temp;
+    }
+}
+
+void matrix_col_interchange(matrix* m,unsigned int index1,unsigned int index2)
+{
+    real temp=0;
+    for(unsigned int i=1;i<=m->size.rows;i++)
+    {
+        temp=(*matrix_at(m,i,index2));
+        *matrix_at(m,i,index2)=*matrix_at(m,i,index1);
+        *matrix_at(m,i,index1)=temp;
+    }
+}
+
 real matrix_det(matrix* m)
 {
-    float factor=0;
+    matrix_order_pivots(m);
+
     float pivot=1;
+    pivot=*matrix_at(m,m->size.rows,m->size.cols);
+
+    if(pivot==0)
+    {
+        return 0;
+    }
+    float factor=0;
     unsigned int col_count=m->size.cols;
     unsigned int row_count=m->size.rows;
 
@@ -353,7 +383,6 @@ real matrix_det(matrix* m)
     {
         // pivot
         pivot=*matrix_at(m,i,i);
-        // matrix_rowop(m,'/',factor,i);
         //same column
         for(int k=i+1;k<=row_count;k++)
         {
@@ -368,4 +397,142 @@ real matrix_det(matrix* m)
         r*=(*matrix_at(m,i,i));
     }
     return r;
+}
+
+unsigned short matrix_is_square(matrix* m)
+{
+    return size_is_square(m->size);
+}
+
+real matrix_sum_row(matrix* m,unsigned int index)
+{
+    real sum=0;
+    for(unsigned int j=1;j<=m->size.cols;j++) 
+    {
+        sum+=(*matrix_at(m,index,j));
+    }
+    return sum;
+}
+
+real matrix_sum_col(matrix* m,unsigned int index)
+{
+    real sum=0;
+    for(unsigned int i=1;i<=m->size.rows;i++) 
+    {
+        sum+=(*matrix_at(m,i,index));
+    }
+    return sum;
+}
+
+void matrix_order_pivots(matrix* m)
+{
+    if(!matrix_is_square(m))
+    {
+        Error("Matrix is not square");
+    }
+    else
+    {
+        for(int k=1;k<m->size.rows;k++)
+        {
+            if(matrix_sum_row(m,k)==0 && matrix_sum_col(m,k)==0)
+            {
+                //zero pivot
+                matrix_col_interchange(m,k,m->size.cols);
+                matrix_row_interchange(m,k,m->size.rows);
+            }
+            else if(matrix_sum_row(m,k)==0)
+            {
+                matrix_row_interchange(m,k,m->size.rows);
+            }
+            else if(matrix_sum_col(m,k)==0)
+            {
+                matrix_col_interchange(m,k,m->size.rows);
+            }
+        }
+
+    }
+}
+
+unsigned short matrix_has(matrix* m,real val)
+{
+    unsigned int result=0;
+
+    for(unsigned int i=1;i<=m->size.rows;i++)
+    {
+        for(unsigned int j=1;j<=m->size.cols;j++)
+        {
+            if((*matrix_at(m,i,j))==val)
+            {
+                result=1;
+                break;
+            }
+        }
+    }
+    return result;
+}
+
+matrix* matrix_inv(matrix* left)
+{
+    if(!matrix_is_square(left))
+    {
+        Error("Matrix is not square!\n");
+        return 0;
+    }
+
+    matrix_order_pivots(left);
+    // matrix_print(left);
+
+    unsigned int len=left->size.cols;
+    matrix * right=matrix_identity(len);
+
+
+    short has_inv=1;
+    for(unsigned int k=1;k<len;k++)
+    {
+        if(matrix_sum_row(left,k)==0)
+        {
+            printf("No inverse!\n");            
+            has_inv=0;
+            break;
+        }
+    }
+
+    if(!has_inv)
+    {
+        return 0;
+    }
+
+    float factor=0;
+    for(unsigned int i=1;i<=len;i++)
+    {
+        // pivot
+        factor=*matrix_at(left,i,i);
+        matrix_rowop(left,'/',factor,i);matrix_rowop(right,'/',factor,i);
+
+        if(i+1<=len)
+        {
+            //same column
+            for(int k=i+1;k<=len;k++)
+            {
+                factor=*matrix_at(left,k,i);
+                matrix_rowadd(left,k,-1.0*factor,i);matrix_rowadd(right,k,-1.0*factor,i);
+            }
+        }
+        // matrix_print(left);
+    }
+
+
+    //now back substitution
+    for(unsigned int i=len;i>=1;i--)
+    {
+        //same column
+        for(int k=1;k<=i-1;k++)
+        {
+            factor=*matrix_at(left,k,i);
+            matrix_rowadd(left,k,-1.0*factor,i);matrix_rowadd(right,k,-1.0*factor,i);
+        }
+        // matrix_print(left);
+    }
+        
+    return matrix_duplicate(right);
 }
